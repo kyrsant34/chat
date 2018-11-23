@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<div class="container register-form">
+    <p> Current user: <b>{{ current_user.username }}</b></p>
+    <a href="{{ router['user-list'].url_for() }}">all users</a>
+    <a href="{{ router['chat-list'].url_for() }}">all chats</a>
+    <br>
+    <br>
+    <div class="form">
+        <div class="note">
+            <p>Users</p>
+        </div>
+        <ul class="list-group">
+        {% for user in users %}
+          <li class="list-group-item">{{ user.username }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+    <br>
+    <br>
+    <div class="form">
+        <div class="note">
+            <p>Chats</p>
+        </div>
+        <ul class="list-group">
+        {% for key in chats %}
+          <li class="list-group-item">id: {{ key }} - users: {{ chats[key] }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+
+<form action="/chats/begin/" method="post" role="form" class="form-horizontal">
+  <div class="form-group">
+    <label for="chat_id" class="col-sm-2 control-label">chat id</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="chat_id" name="chat_id" placeholder="9">
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-default">Join chat</button>
+    </div>
+  </div>
+</form>
+
+<form action="/chats/begin/" method="post" role="form" class="form-horizontal">
+  <div class="form-group">
+    <label for="usernames" class="col-sm-2 control-label">usernames</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="usernames" name="usernames" placeholder='["pavel", "alex"]'>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-default">Create chat</button>
+    </div>
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,42 @@
+version: '3.4'
+
+
+services:
+    chat-db:
+     image: mysql:5.7.24
+     container_name: chat-db
+     environment:
+       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+       - MYSQL_DATABASE=${DB_DATABASE}
+     volumes:
+         - ./.docker/mysql/data:/var/lib/mysql
+     restart: always
+     expose:
+       - "3306"
+     networks:
+      - chat-network
+     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --default-password-lifetime=0 --performance-schema=0
+
+    chat-app:
+     container_name: chat-app
+     image: chat_chat-app:latest
+     build:
+       context: ./
+     env_file:
+       - .env
+     volumes:
+       - './:/code'
+     restart: always
+     ports:
+       - "8090:8080"
+     depends_on:
+       - chat-db
+     networks:
+       - chat-network
+     # sleep for db
+     command: bash -c "sleep 10 && python migrate.py && python server.py"
+
+networks:
+  chat-network:
+    external:
+      name: chat-network

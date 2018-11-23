@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Chat {{chat_id}}</h1>
+    <div id="status">Connecting...</div>
+
+    <ul id="messages"></ul>
+
+    <form id="message-form" action="#" method="post">
+      <textarea id="message" placeholder="Write your message here..." required></textarea>
+      <button type="submit">Send Message</button>
+      <button type="button" id="close">Close Connection</button>
+    </form>
+  <p> Current user: <b>{{ current_user.username }}</b></p>
+  </div>
+
+  <script>
+  window.onload = function() {
+    var form = document.getElementById('message-form');
+    var messageField = document.getElementById('message');
+    var messagesList = document.getElementById('messages');
+    var socketStatus = document.getElementById('status');
+    var closeBtn = document.getElementById('close');
+    var socket = new WebSocket('ws://' + window.location.host + '/chats/{{chat_id}}/');
+
+    socket.onopen = function(event) {
+      socketStatus.innerHTML = 'Connected to: ' + event.currentTarget.url;
+      socketStatus.className = 'open';
+      };
+
+    socket.onerror = function(error) {
+      console.log('WebSocket Error: ' + error);
+    };
+
+    form.onsubmit = function(e) {
+      e.preventDefault();
+      var message = messageField.value;
+      socket.send(message);
+      messagesList.innerHTML += '<li class="sent">You: ' + message +
+                                '</li>';
+      messageField.value = '';
+      return false;
+    };
+
+    socket.onmessage = function(event) {
+      var message = event.data;
+      messagesList.innerHTML += '<li class="received">' + message +
+                                '</li>';
+    };
+
+    // Close the WebSocket connection when the close button is clicked.
+    closeBtn.onclick = function(e) {
+      e.preventDefault();
+
+      // Close the WebSocket.
+      socket.close();
+
+      return false;
+    };
+
+    socket.onclose = function(event) {
+      socketStatus.innerHTML = 'Disconnected from WebSocket.';
+      socketStatus.className = 'closed';
+    };
+  };
+  </script>
+{% endblock %}

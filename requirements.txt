@@ -1,0 +1,6 @@
+aiohttp==3.4.4
+aiohttp-session==2.7.0
+aiohttp-jinja2==1.1.0
+aiomysql==0.0.19
+peewee==2.10.2
+peewee-async==0.5.12
