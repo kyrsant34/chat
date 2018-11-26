@@ -1,4 +1,4 @@
-# iohttp+asyncpg
+# iohttp + peewee-async
 
 1. cd ./chat (переходим в каталог с проектом)
 
